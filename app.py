@@ -4,16 +4,22 @@ import json
 import logging
 
 import web
-
-logger = logging.getLogger(__name__)
+from wsgilog import WsgiLog
 
 urls = ("/.*", "hooks")
+
+
+class Log(WsgiLog):
+    def __init__(self, application):
+        WsgiLog.__init__(self, application, tostream=True, toprint=True)
+
 
 app = web.application(urls, globals())
 
 
 def log_webhook(method: str) -> str:
     """Log all relevent webhook info."""
+    logger = logging.getLogger(__name__)
     METHODS_WHERE_DATA_IS_IN_INPUT = [
         "GET",
     ]
@@ -34,6 +40,7 @@ def log_webhook(method: str) -> str:
         f"WEBHOOK RECEIVED: HTTP {method.upper()} {web.url()} data={formatted_data}"
     )
     logger.info(webhook_received_msg)
+    print(f"print: {webhook_received_msg}")
     return webhook_received_msg
 
 
@@ -67,4 +74,4 @@ class hooks:
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(Log)
