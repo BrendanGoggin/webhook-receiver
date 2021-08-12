@@ -32,7 +32,7 @@ ngrok http 9999
 
 Add the following `.vscode/launch.json` file:
 
-```json
+```javascript
 {
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
